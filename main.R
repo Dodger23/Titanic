@@ -86,7 +86,7 @@ support_vectors_machine = function (training , testing)
 }
 
 
-support_vectors_machine_model = support_vectors_machine(training , testing)
+#support_vectors_machine_model = support_vectors_machine(training , testing)
 support_vectors_machine_model
 
 
@@ -105,7 +105,7 @@ random_forst = function(training , testing )
   confusionMatrix(pred , testing$Survived)$overall[1] *100
 }
 
-random_forest_model = random_forst(training , testing )
+#random_forest_model = random_forst(training , testing )
 random_forest_model
 
 
@@ -121,7 +121,7 @@ naive_bayes = function(training , testing )
   confusionMatrix(pred , testing$Survived)$overall[1] *100
 }
 
-naive_bayes_model = naive_bayes(training , testing )
+#naive_bayes_model = naive_bayes(training , testing )
 naive_bayes_model
 
 
@@ -147,7 +147,7 @@ decision_tree = function(training , testing )
   confusionMatrix(p , testing$Survived)$overall[1] *100
 }
 
-decision_tree_model = decision_tree(training , testing )
+#decision_tree_model = decision_tree(training , testing )
 decision_tree_model
 
 
@@ -156,7 +156,7 @@ decision_tree_model
 linear_discriminant_analysis = function(training , testing )
 {
   
-  # Training the model on the training data with 
+  # Training the model on the training data with linear discriminant analysis
   modelFit = naiveBayes(Survived ~ . , method = "lda" , data = training  )
   
   #Predicting on the testing data and showing accuracy 
@@ -166,8 +166,27 @@ linear_discriminant_analysis = function(training , testing )
 }
 
 
-linear_discriminant_analysis_model = linear_discriminant_analysis(training , testing )
+#linear_discriminant_analysis_model = linear_discriminant_analysis(training , testing )
 linear_discriminant_analysis_model 
+
+
+
+ada_boost = function(training , testing)
+{
+  library(ada)
+  
+  # Training the model on the training data with ada boost 
+  modelFit = ada(Survived ~ . , data = training )
+  modelFit
+  
+  #Predicting on the testing data and showing accuracy 
+  pred = predict(modelFit , testing)
+  print(confusionMatrix(pred , testing$Survived))
+  confusionMatrix(pred , testing$Survived)$overall[1] *100
+}
+
+ada_boost_model = ada_boost(training , testing )
+ada_boost_model
 
 
 
