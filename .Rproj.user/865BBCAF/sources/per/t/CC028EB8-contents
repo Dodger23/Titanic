@@ -149,3 +149,27 @@ decision_tree = function(training , testing )
 
 decision_tree_model = decision_tree(training , testing )
 decision_tree_model
+
+
+
+
+linear_discriminant_analysis = function(training , testing )
+{
+  
+  # Training the model on the training data with 
+  modelFit = naiveBayes(Survived ~ . , method = "lda" , data = training  )
+  
+  #Predicting on the testing data and showing accuracy 
+  pred = predict(modelFit , testing)
+  print(confusionMatrix(pred , testing$Survived))
+  confusionMatrix(pred , testing$Survived)$overall[1] *100
+}
+
+
+linear_discriminant_analysis_model = linear_discriminant_analysis(training , testing )
+linear_discriminant_analysis_model 
+
+
+
+
+
