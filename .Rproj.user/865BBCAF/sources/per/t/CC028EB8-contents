@@ -114,7 +114,7 @@ naive_bayes = function(training , testing )
 {
   # Training the model on the training data with naive bayes and enabling laplace for smoothing effect
   modelFit = naiveBayes(Survived ~ . , method = "nb" , data = training  , laplace = 1)
-  modelFit
+  
   #Predicting on the testing data and showing accuracy 
   pred = predict(modelFit , testing)
   print(confusionMatrix(pred , testing$Survived))
@@ -124,3 +124,28 @@ naive_bayes = function(training , testing )
 naive_bayes_model = naive_bayes(training , testing )
 naive_bayes_model
 
+
+
+decision_tree = function(training , testing )
+{
+  # Training the model on the training data
+  modelFit  = rpart(Survived ~ . , data = training)
+  modelFit
+  
+  #Predicting on the testing data and showing accuracy 
+  pred = predict(modelFit , newdata = testing)
+  p = vector()
+  for(i in 1:length(pred[,2]))
+  {
+    if(pred[i , 1] >= pred[i, 2])
+      p = c(p , 0)
+    else
+      p = c(p , 1)
+  }
+  p = as.factor(p)
+  print(confusionMatrix(p , testing$Survived))
+  confusionMatrix(p , testing$Survived)$overall[1] *100
+}
+
+decision_tree_model = decision_tree(training , testing )
+decision_tree_model
