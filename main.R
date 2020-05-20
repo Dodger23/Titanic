@@ -24,13 +24,24 @@ explore = function (data)
 {
   str(data)
   
+  # Find number of NA's in each variable 
   find_na = apply(is.na(data),2,sum)
+  # Find the percentage of NA's in each variable 
   find_na_percent = apply(is.na(data) , 2 , sum  ) / nrow(data) *100
+  
+  # Saving the names of variables which contain NA values 
   c = names(find_na)[find_na > 0]
+  
+  # Print names of each variable that contains NA values and the nummber of NA values in it
   print(find_na[ which(names(find_na) %in% c )] )
+  
+  # Print names of each variable that contains NA values and the percentage of NA values in it
   print(find_na_percent[ which(names(find_na_percent) %in% c )])
+  
+  # Cleaning the data 
   data = clean(data)
   
+  # Plotting relations bettween variables to find patterns 
   png(filename = "images/featuresPlot.png" , width = 1366 , height = 768 , units = "px")
   p = featurePlot(x = data[,-which(names(data) %in% c("Ticket" , "Survived"))] ,y = data[,1] ,
               plot = "pairs" , 
@@ -55,19 +66,38 @@ testing = clean(testing)
 
 support_vectors_machine = function (training , testing)
 {
+  # Training the model using support vectors machoine with a linear kernel 
   modelFit = svm(Survived ~ . ,
                  data = training , 
                  type = "C-classification",
                  kernel = "linear"
                  )
+  
+  # Predicting on the testing data and showing accuracy 
   pred = predict(modelFit , testing)
   print(confusionMatrix(pred , testing$Survived))
   confusionMatrix(pred , testing$Survived)$overall[1] *100
 }
 
 
-support_vectors_machine(training , testing)
+support_vectors_machine_model = support_vectors_machine(training , testing)
+support_vectors_machine_model
 
 
 
+random_forst = function(training , testing )
+{
+  # Saving a call to the trainControl() with method = Cross Validation 
+  tCall = trainControl(method = "cv" , number  = 5)
+  
+  # Training the model on the training data with random forest and Cross Validation 
+  modelFit = train(Survived ~ . , method = "rf" , data = training , trControl = tCall)
+  
+  # Predicting on the testing data and showing accuracy 
+  pred = predict(modelFit , testing)
+  print(confusionMatrix(pred , testing$Survived))
+  confusionMatrix(pred , testing$Survived)$overall[1] *100
+}
 
+random_forest_model = random_forst(training , testing )
+random_forest_model
