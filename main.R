@@ -53,5 +53,21 @@ training = clean(training)
 testing = clean(testing)
 
 
+support_vectors_machine = function (training , testing)
+{
+  modelFit = svm(Survived ~ . ,
+                 data = training , 
+                 type = "C-classification",
+                 kernel = "linear"
+                 )
+  pred = predict(modelFit , testing)
+  print(confusionMatrix(pred , testing$Survived))
+  confusionMatrix(pred , testing$Survived)$overall[1] *100
+}
+
+
+support_vectors_machine(training , testing)
+
+
 
 
