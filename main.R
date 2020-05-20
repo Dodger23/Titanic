@@ -14,8 +14,13 @@ clean = function(data)
   data$Survived = as.factor(data$Survived)
   c= c("Name" , "PassengerId"  , "Cabin")
   data = data[, -which(names(data) %in% c )]
-  data[is.na(data$Age) , "Age"] = median(data$Age , na.rm = TRUE)
-  data[is.na(data$Embarked) , "Embarked"] = levels(data$Embarked)[runif(1 , 1 , 3)]
+  if(sum(is.na(data$Age)) > 0)
+    data[is.na(data$Age) , "Age"] = median(data$Age , na.rm = TRUE)
+  if(sum(is.na(data$Embarked)) > 0)
+    data[is.na(data$Embarked) , "Embarked"] = levels(data$Embarked)[runif(1 , 1 , 3)]
+  if(sum(is.na(data$Fare)) > 0)
+    data[is.na(data$Fare) , "Fare"] = median(data$Fare , na.rm = TRUE)  
+  
   data
 }
 
@@ -26,6 +31,7 @@ explore = function (data)
   
   # Find number of NA's in each variable 
   find_na = apply(is.na(data),2,sum)
+  
   # Find the percentage of NA's in each variable 
   find_na_percent = apply(is.na(data) , 2 , sum  ) / nrow(data) *100
   
@@ -61,7 +67,7 @@ testing = data[-inTrain , ]
 
 #cleaning training and testing
 training = clean(training)
-testing = clean(testing)
+testing  = clean(testing)
 
 
 support_vectors_machine = function (training , testing)
@@ -101,3 +107,20 @@ random_forst = function(training , testing )
 
 random_forest_model = random_forst(training , testing )
 random_forest_model
+
+
+
+naive_bayes = function(training , testing )
+{
+  # Training the model on the training data with naive bayes and enabling laplace for smoothing effect
+  modelFit = naiveBayes(Survived ~ . , method = "nb" , data = training  , laplace = 1)
+  modelFit
+  #Predicting on the testing data and showing accuracy 
+  pred = predict(modelFit , testing)
+  print(confusionMatrix(pred , testing$Survived))
+  confusionMatrix(pred , testing$Survived)$overall[1] *100
+}
+
+naive_bayes_model = naive_bayes(training , testing )
+naive_bayes_model
+
