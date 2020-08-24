@@ -13,4 +13,4 @@ Trying to predict survived/dead passengers from the Titanic data using different
  - ada boosting
 
 Current score : **0.78468**
-Current rank :** 6431 ( out of 22277 )/ Top 29%**
+Current rank : **6431 ( out of 22277 )/ Top 29%** 
